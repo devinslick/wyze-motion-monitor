@@ -1,12 +1,12 @@
 # Wyze Motion Monitor
 
-Wyze Motion Monitor is a Go application that monitors the latest image for motion events and the latest motion recordings in specified directories on Wyze cameras. It sends the paths of the latest JPG and MP4 files as a JSON payload to a webhook URL. This is particularly useful when using gtxaspec/wz_mini_hacks on Wyze cameras for local integration with Home Assistant.
+Wyze Motion Monitor is a Go application for Wyze cameras that monitors the latest event detection images, copies them to the locally available webserver and, optionally, notifies a webhook address that the camera has a new image.  Inspired by gtxaspec/wz_mini_hacks and intended to be used for local integration with Home Assistant.
 
 ## Prerequisites
 
-- Go programming language (version 1.16 or later)
-- Linux operating system (tested on amd64 and mipsle architecture)
-- A destination webhook address (probably Home Assistant)
+- Go 1.18 installed on a system where you can compile the binary
+- A Wyzecam that you have SSH access to.  Check out gtxaspec/wz_mini_hacks if you need help with this.  Tested on v3 cameras, but should work on others.
+- Optionally, a destination webhook address (probably Home Assistant) to notify of the new JPG.
 
 ## Installation
 
@@ -19,4 +19,7 @@ Wyze Motion Monitor is a Go application that monitors the latest image for motio
 3. Copy the resulting binary (wyze-motion-monitor) to your Wyze camera(s) using scp, WinSCP, or your sdcard.
 4. Test the execution from a shell
    ```shell
+   Without a webhook:
+   ./wyze-motion-monitor
+   With a webhook:
    ./wyze-motion-monitor <cameraName> <webhookURL>
