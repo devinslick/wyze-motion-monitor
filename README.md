@@ -26,6 +26,6 @@ Wyze Motion Monitor is a Go application for Wyze cameras that monitors the lates
 5. Install a cron job to start the process if it isn't running
    ```shell
    Without a webhook:
-   echo '* * * * * /media/mmc/wz_mini/wyze-motion-monitor' >> /media/mmc/wz_mini/etc/cron/root
+   echo -n '* * * * * /media/mmc/wz_mini/wyze-motion-monitor' >> /media/mmc/wz_mini/etc/cron/root
    With a webhook notification:
-   echo '* * * * * /media/mmc/wz_mini/wyze-motion-monitor FrontPorchCamera https://myhomeassistant.domain.com/api/webhook/secretWebHookAddress' >> /media/mmc/wz_mini/etc/cron/root
+   echo -n '* * * * * /media/mmc/wz_mini/wyze-motion-monitor FrontPorchCamera https://myhomeassistant.domain.com/api/webhook/secretWebHookAddress' >> /media/mmc/wz_mini/etc/cron/root
