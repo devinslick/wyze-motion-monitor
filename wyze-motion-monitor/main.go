@@ -33,12 +33,12 @@ func sendPayload(webhookURL string, payload Payload) error {
 	}
 
 	transport := &http.Transport{
-		TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-	}
-	client := &http.Client{Transport: transport}
+	  TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+        }
+        client := &http.Client{Transport: transport}
 
-	// Use the custom HTTP client for sending the request
-	resp, err := client.Post(webhookURL, "application/json", strings.NewReader(string(jsonPayload)))
+        // Use the custom HTTP client for sending the request
+        resp, err := client.Post(webhookURL, "application/json", strings.NewReader(string(jsonPayload)))
 
 	if err != nil {
 		return err
@@ -120,9 +120,16 @@ func monitorJPGFiles(folderPath, cameraName, webhookURL string) {
 
 					// Send JSON payload to webhook if webhook URL is provided
 					if webhookURL != "" {
-						payload := Payload{
-							CameraName: cameraName,
-							JPGPath:    latestJPGPath,
+						var payload Payload
+						if cameraName != "" {
+							payload = Payload{
+								CameraName: cameraName,
+								JPGPath:    latestJPGPath,
+							}
+						} else {
+							payload = Payload{
+								JPGPath: latestJPGPath,
+							}
 						}
 
 						err := sendPayload(webhookURL, payload)
@@ -207,21 +214,19 @@ func sortFiles(files []string) {
 }
 
 func main() {
-	// Retrieve command-line arguments
-	cameraName := os.Args[1]
-	var webhookURL string
-	if len(os.Args) > 2 {
+	cameraName := ""
+	webhookURL := ""
+
+	// If camera name is provided
+	if len(os.Args) >= 2 {
+		cameraName = os.Args[1]
+	}
+
+	// If webhook URL is provided
+	if len(os.Args) >= 3 {
 		webhookURL = os.Args[2]
 	}
 
-	// Specify the folder path for JPG monitoring
-	jpgFolderPath := "/media/mmc/alarm"
-
 	log.Printf("Starting JPG monitoring for Camera: %s", cameraName)
-
-	// Start monitoring JPG files
-	go monitorJPGFiles(jpgFolderPath, cameraName, webhookURL)
-
-	// Wait indefinitely
-	select {}
+	monitorJPGFiles("/media/mmc/alarm", cameraName, webhookURL)
 }
